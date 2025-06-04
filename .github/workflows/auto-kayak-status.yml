@@ -22,17 +22,13 @@ jobs:
             KAYAK_STATUS="closed"
           fi
 
-          echo "Setting kayaks to $KAYAK_STATUS"
-
-          cat <<EOF > status.json
-          {
-            "sun_ridge": "closed",
-            "commons": "closed",
-            "point": "closed",
-            "aquatic": "closed",
-            "kayaks": "$KAYAK_STATUS"
-          }
-EOF
+          echo "{" > status.json
+          echo "  \"sun_ridge\": \"closed"," >> status.json
+          echo "  \"commons\": \"closed"," >> status.json
+          echo "  \"point\": \"closed"," >> status.json
+          echo "  \"aquatic\": \"closed"," >> status.json
+          echo "  \"kayaks\": \"$KAYAK_STATUS\"" >> status.json
+          echo "}" >> status.json
 
       - name: Commit and push changes
         run: |

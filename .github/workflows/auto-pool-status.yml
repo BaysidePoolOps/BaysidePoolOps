@@ -22,17 +22,13 @@ jobs:
             STATUS="closed"
           fi
 
-          echo "Setting all pools to $STATUS"
-
-          cat <<EOF > status.json
-          {
-            "sun_ridge": "$STATUS",
-            "commons": "$STATUS",
-            "point": "$STATUS",
-            "aquatic": "$STATUS",
-            "kayaks": "closed"
-          }
-EOF
+          echo "{" > status.json
+          echo "  \"sun_ridge\": \"$STATUS"," >> status.json
+          echo "  \"commons\": \"$STATUS"," >> status.json
+          echo "  \"point\": \"$STATUS"," >> status.json
+          echo "  \"aquatic\": \"$STATUS"," >> status.json
+          echo "  \"kayaks\": \"closed\"" >> status.json
+          echo "}" >> status.json
 
       - name: Commit and push changes
         run: |
