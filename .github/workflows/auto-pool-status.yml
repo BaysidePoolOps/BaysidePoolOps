@@ -1,0 +1,43 @@
+name: Auto Pool Open/Close
+
+on:
+  schedule:
+    - cron: '0 14 * * *'  # 10:00 AM EDT = 14:00 UTC
+    - cron: '0 23 * * *'  # 7:00 PM EDT = 23:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-pool-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set status based on time
+        run: |
+          hour=$(date -u +"%H")
+          if [ "$hour" -eq 14 ]; then
+            STATUS="open"
+          else
+            STATUS="closed"
+          fi
+
+          echo "Updating all pools to $STATUS"
+
+          cat <<EOF > status.json
+          {
+            "sun_ridge": "$STATUS",
+            "commons": "$STATUS",
+            "point": "$STATUS",
+            "aquatic": "$STATUS",
+            "kayaks": "$(jq -r .kayaks status.json || echo 'closed')"
+          }
+EOF
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add status.json
+          git commit -m "Auto update pool status to $STATUS"
+          git push
