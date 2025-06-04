@@ -2,8 +2,8 @@ name: Auto Pool Open/Close
 
 on:
   schedule:
-    - cron: '0 14 * * *'  # 10:00 AM EDT = 14:00 UTC
-    - cron: '0 23 * * *'  # 7:00 PM EDT = 23:00 UTC
+    - cron: '0 14 * * *'  # 10:00 AM EDT
+    - cron: '0 23 * * *'  # 7:00 PM EDT
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set status based on time
+      - name: Set pool status based on time
         run: |
           hour=$(date -u +"%H")
           if [ "$hour" -eq 14 ]; then
@@ -22,7 +22,7 @@ jobs:
             STATUS="closed"
           fi
 
-          echo "Updating all pools to $STATUS"
+          echo "Setting all pools to $STATUS"
 
           cat <<EOF > status.json
           {
@@ -30,7 +30,7 @@ jobs:
             "commons": "$STATUS",
             "point": "$STATUS",
             "aquatic": "$STATUS",
-            "kayaks": "$(jq -r .kayaks status.json || echo 'closed')"
+            "kayaks": "closed"
           }
 EOF
 
