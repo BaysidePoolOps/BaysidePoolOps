@@ -6,6 +6,9 @@ on:
     - cron: '0 23 * * *'  # 7:00 PM EDT
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   update-pool-status:
     runs-on: ubuntu-latest

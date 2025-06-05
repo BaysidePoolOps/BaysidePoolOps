@@ -6,6 +6,9 @@ on:
     - cron: '0 19 * * *'  # 3:00 PM EDT
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   update-kayak-status:
     runs-on: ubuntu-latest
