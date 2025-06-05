@@ -1,7 +1,7 @@
 {
   "sun_ridge": "open",
   "commons": "open",
-  "point": "open",
+  "point": "closed",
   "aquatic": "open",
   "kayaks": "closed"
 }
