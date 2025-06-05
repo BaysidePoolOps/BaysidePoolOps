@@ -1,1 +1,7 @@
-{"sun_ridge": "closed", "commons": "closed", "point": "closed", "aquatic": "closed", "kayaks": "open"}
+{
+  "sun_ridge": "closed, >> status.json
+echo  "commons": "closed,
+  "point": "closed, >> status.json
+echo  "aquatic": "closed,
+  "kayaks": "closed"
+}
