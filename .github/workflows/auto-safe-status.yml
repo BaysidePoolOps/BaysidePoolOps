@@ -1,0 +1,35 @@
+name: Auto Status Update (Safe)
+
+on:
+  schedule:
+    - cron: '0 12 * * *'  # 8 AM UTC - Kayaks OPEN
+    - cron: '0 14 * * *'  # 10 AM UTC - Pools OPEN
+    - cron: '0 19 * * *'  # 3 PM UTC - Kayaks CLOSE
+    - cron: '0 23 * * *'  # 7 PM UTC - Pools CLOSE
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run status updater
+        run: python auto_update_status.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add status.json
+          git commit -m "Auto update status.json" || echo "No changes to commit"
+          git push
