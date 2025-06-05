@@ -1,0 +1,5 @@
+[2025-06-04 07:59] Kayaks set to OPEN (Auto)
+[2025-06-04 10:00] All Pools set to OPEN (Auto)
+[2025-06-04 12:34] Point Pool set to CLOSED (Manual override)
+[2025-06-04 14:59] Kayaks set to CLOSED (Auto)
+[2025-06-04 19:00] All Pools set to CLOSED (Auto)

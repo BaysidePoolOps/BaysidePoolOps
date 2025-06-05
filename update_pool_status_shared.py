@@ -1,22 +1,56 @@
-
 import json
 import sys
+from datetime import datetime
 
-POOL_FILE = "S:/StreamDeck/status.json"  # Shared network drive path
+STATUS_FILE = "status.json"
+LOG_FILE = "status_log.txt"
 
-pool = sys.argv[1].lower()
-status = sys.argv[2].lower()
+VALID_FACILITIES = {
+    "sun_ridge": "Sun Ridge Pool",
+    "commons": "Commons Pool",
+    "point": "The Point Pool",
+    "aquatic": "Aquatic Club",
+    "kayaks": "Kayaks"
+}
 
-with open(POOL_FILE, 'r') as f:
-    data = json.load(f)
+def log_change(facility_key, status, method="Manual override"):
+    now = datetime.now().strftime("[%Y-%m-%d %H:%M]")
+    facility_name = VALID_FACILITIES.get(facility_key, facility_key)
+    log_entry = f"{now} {facility_name} set to {status.upper()} ({method})"
+    with open(LOG_FILE, "a") as log_file:
+        log_file.write(log_entry + "\n")
 
-if pool in data:
-    data[pool] = status
-else:
-    print("Invalid pool name.")
-    sys.exit(1)
+def main():
+    if len(sys.argv) != 3:
+        print("Usage: python update_pool_status_shared.py [facility] [open|closed]")
+        return
 
-with open(POOL_FILE, 'w') as f:
-    json.dump(data, f)
+    facility = sys.argv[1].lower()
+    status = sys.argv[2].lower()
 
-print(f"{pool} set to {status}")
+    if facility not in VALID_FACILITIES:
+        print("Invalid facility name.")
+        return
+
+    if status not in ("open", "closed"):
+        print("Invalid status. Use 'open' or 'closed'.")
+        return
+
+    try:
+        with open(STATUS_FILE, "r") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        data = {k: "closed" for k in VALID_FACILITIES}
+
+    previous_status = data.get(facility)
+    data[facility] = status
+
+    with open(STATUS_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+
+    print(f"{facility} set to {status}")
+    if previous_status != status:
+        log_change(facility, status)
+
+if __name__ == "__main__":
+    main()
